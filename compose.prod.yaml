@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      target: prod
+    environment:
+      APP_ENV: ${APP_ENV:-prod}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    networks:
+      - caddy_network
+
+  notifuse:
+    networks:
+      - internal_network
+      - caddy_network
+
+  minio:
+    networks:
+      - internal_network
+      - caddy_network
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      APP_HOST: ${APP_HOST:-app.example.com}
+      NOTIFUSE_HOST: ${NOTIFUSE_HOST:-notifuse.example.com}
+      S3_HOST: ${S3_HOST:-s3.example.com}
+      MINIO_CONSOLE_HOST: ${MINIO_CONSOLE_HOST:-minio.example.com}
+    volumes:
+      - ./Caddy/Caddyfile.prod:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - caddy_network
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  caddy_network:
+    driver: bridge

@@ -1,0 +1,61 @@
+services:
+  app:
+    build:
+      target: dev
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-1}
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+    volumes:
+      - ./php:/app
+    networks:
+      - caddy_network
+
+  node:
+    image: mcr.microsoft.com/playwright:v1.58.2-noble
+    restart: unless-stopped
+    working_dir: /app
+    command: ["sh", "-c", "tail -f /dev/null"]
+    volumes:
+      - ./php:/app
+    extra_hosts:
+      - "${APP_HOST:-app.local}:host-gateway"
+    networks:
+      - internal_network
+      - caddy_network
+
+  notifuse:
+    networks:
+      - internal_network
+      - caddy_network
+
+  minio:
+    networks:
+      - internal_network
+      - caddy_network
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      APP_HOST: ${APP_HOST:-app.local}
+      NOTIFUSE_HOST: ${NOTIFUSE_HOST:-notifuse.local}
+      S3_HOST: ${S3_HOST:-s3.local}
+      MINIO_CONSOLE_HOST: ${MINIO_CONSOLE_HOST:-minio.local}
+    volumes:
+      - ./Caddy/Caddyfile.dev:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - caddy_network
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  caddy_network:
+    driver: bridge

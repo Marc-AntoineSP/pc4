@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      target: staging
+    environment:
+      APP_ENV: ${APP_ENV:-staging}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    networks:
+      - caddy_network
+    labels:
+      caddy: ${APP_HOST:-staging.app.local}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+
+  notifuse:
+    networks:
+      - internal_network
+      - caddy_network
+    labels:
+      caddy: ${NOTIFUSE_HOST:-notifuse.staging.app.local}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+
+  minio:
+    networks:
+      - internal_network
+      - caddy_network
+    labels:
+      caddy: ${S3_HOST:-s3.staging.app.local}
+      caddy.reverse_proxy: "{{upstreams 9000}}"
+      caddy_1: ${MINIO_CONSOLE_HOST:-minio.staging.app.local}
+      caddy_1.reverse_proxy: "{{upstreams 9001}}"
+
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      caddy_network:
+        aliases:
+          - ${APP_HOST:-staging.app.local}
+          - ${S3_HOST:-s3.staging.app.local}
+          - ${MINIO_CONSOLE_HOST:-minio.staging.app.local}
+          - ${NOTIFUSE_HOST:-notifuse.staging.app.local}
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  caddy_network:
+    driver: bridge
