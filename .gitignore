@@ -19,4 +19,3 @@ Caddy/config/
 Thumbs.db
 /.env.prod
 /.env.staging
-/ADR/
