@@ -1,17 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Bibliothèque{% endblock %}
 
 {% block body %}
-    <div id="sidebar">
-
-    </div>
-    <div id="content">
-        <nav>
-
-        </nav>
-        <main>
-
+    <div class="drawer-content flex h-screen flex-col overflow-hidden">
+        <div class="navbar shadow sticky top-0 z-30 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center border-b border-base-300 bg-base-100 px-6">
+            <div class="flex min-w-0 justify-start">
+                <a class="text-2xl font-serif font-bold tracking-tight text-primary">The Great Library</a>
+            </div>
+            <div class="hidden justify-center md:flex">
+                <div class="form-control relative w-[28rem] max-w-md">
+                    <input id="library-search" class="input input-bordered w-full rounded-none bg-base-200 pr-11 focus:border-primary focus:outline-none" placeholder="Search the collection..." type="text"/>
+                    <label class="absolute top-1/2 right-3 flex -translate-y-1/2 cursor-pointer items-center justify-center text-primary/60 transition-colors hover:text-primary" for="library-search">
+                        <twig:ux:icon name="streamline-sharp:magnifying-glass" alt="search icon"/>
+                    </label>
+                </div>
+            </div>
+            <div id="btn-group" class="flex min-w-0 items-center justify-end gap-3">
+                <button class="btn btn-ghost btn-sm rounded-btn">
+                    <twig:ux:icon name="mdi:user" class="sm:size-4 md:size-6 lg:size-8" alt="user icon"/>
+                </button>
+            </div>
+        </div>
+        <main class="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col overflow-hidden p-4 lg:p-6">
+            <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <h1 class="mb-2 text-4xl font-serif font-bold text-primary lg:text-5xl">The Master Catalog</h1>
+                    <p class="max-w-xl text-sm opacity-70 italic lg:text-base">Lorem ipsum bon bah il veut pas autocomplete. Bah un texte je sais pas quoi en fait.</p>
+                </div>
+                <twig:BookTracking volumes="1482" reserved="84"/>
+            </div>
+            <div class="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <twig:BookPrimary title="Je sais pas quoi mettre mais c'est cool comme titre" description="lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." author="Jean Dupont"/>
+                <twig:BookSecondary title="Les chroniques d'un DI en 2026" author="Jean-Luc" date="2026"/>
+            </div>
+            <div class="mb-4 flex items-center justify-between border-b-2 border-primary/10 pb-3">
+                <h3 class="text-xl font-serif font-bold text-primary">Latest Additions</h3>
+                <button class="btn btn-link btn-xs text-primary font-sans uppercase tracking-widest no-underline hover:underline">View All</button>
+            </div>
+            <div class="grid min-h-0 flex-1 grid-cols-2 gap-4 lg:grid-cols-4">
+                <twig:Book type="Fiction" title="Les mésaventures du cube 1" author="Py. Thon" available="true" />
+                <twig:Book type="Non-Fiction" title="PHP, tu l'aimes ou tu le quittes" author="Mec bizarre" available="true" />
+                <twig:Book type="Rare Editions" title="Pourquoi j'aime CSS" author="Jean-Michel Délu" available="true" />
+                <twig:Book type="Drame" title="Typescript > Javascript, une guerre sans fin" author="DI Press" available="false" />
+            </div>
         </main>
     </div>
 {% endblock %}
