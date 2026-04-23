@@ -30,12 +30,12 @@
                 <div class="flex items-center gap-3 border-t border-white/10 pt-6">
                     <div class="avatar placeholder">
                         <div class="bg-primary text-primary-content rounded-full w-10 border border-secondary/30 flex justify-center items-center">
-                            <span class="material-symbols-outlined">TT</span>
+                            <span class="material-symbols-outlined">{{ app.user.email|first|upper }}</span>
                         </div>
                     </div>
                     <div>
                         <p class="text-[10px] font-bold uppercase tracking-tighter text-secondary">Your Profile</p>
-                        <p class="text-xs opacity-60">Test Test</p>
+                        <p class="text-xs opacity-60">{{ app.user.email }}</p>
                     </div>
                 </div>
             </div>
