@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Book;
+use App\Enum\BookTypeEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -19,6 +21,9 @@ class BookCreationType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'Title',
             ])
+            ->add('author', TextType::class, [
+                'label' => 'Author',
+            ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'attr' => [
@@ -30,6 +35,12 @@ class BookCreationType extends AbstractType
                 'attr' => [
                     'rows' => 5,
                 ],
+            ])
+            ->add('type', EnumType::class, [
+                'class' => BookTypeEnum::class,
+                'label' => 'Type',
+                'placeholder' => 'Select a type',
+                'choice_label' => static fn (BookTypeEnum $choice): string => $choice->label(),
             ])
             ->add('pages', IntegerType::class, [
                 'label' => 'Pages',

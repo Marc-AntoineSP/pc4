@@ -4,7 +4,7 @@
 
 {% block main_content %}
     <div class="drawer-content flex h-screen flex-col overflow-hidden">
-        <main class="mx-auto flex h-full w-full max-w-4xl flex-col overflow-auto p-4 lg:p-8">
+        <main class="scrollbar-hidden mx-auto flex h-full w-full max-w-4xl flex-col overflow-auto p-4 lg:p-8">
             <header class="mb-6 border-b-2 border-primary/10 pb-4">
                 <h1 class="text-4xl font-serif font-bold text-primary lg:text-5xl">Add a New Book</h1>
                 <p class="mt-2 text-sm italic opacity-70 lg:text-base">Create a volume in the catalog with the form below.</p>
@@ -29,6 +29,14 @@
 
                         <div class="form-control w-full">
                             <div class="label px-0 pb-2">
+                                {{ form_label(bookForm.author, null, { label_attr: { class: 'label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/75' } }) }}
+                            </div>
+                            {{ form_widget(bookForm.author, { attr: { class: 'input input-bordered w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none', placeholder: 'Author name' } }) }}
+                            <div class="mt-1 text-sm text-error">{{ form_errors(bookForm.author) }}</div>
+                        </div>
+
+                        <div class="form-control w-full">
+                            <div class="label px-0 pb-2">
                                 {{ form_label(bookForm.description, null, { label_attr: { class: 'label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/75' } }) }}
                             </div>
                             {{ form_widget(bookForm.description, { attr: { class: 'textarea textarea-bordered min-h-24 w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none', placeholder: 'Description' } }) }}
@@ -41,6 +49,14 @@
                             </div>
                             {{ form_widget(bookForm.summary, { attr: { class: 'textarea textarea-bordered min-h-32 w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none', placeholder: 'Summary' } }) }}
                             <div class="mt-1 text-sm text-error">{{ form_errors(bookForm.summary) }}</div>
+                        </div>
+
+                        <div class="form-control w-full max-w-xs">
+                            <div class="label px-0 pb-2">
+                                {{ form_label(bookForm.type, null, { label_attr: { class: 'label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/75' } }) }}
+                            </div>
+                            {{ form_widget(bookForm.type, { attr: { class: 'select select-bordered w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none' } }) }}
+                            <div class="mt-1 text-sm text-error">{{ form_errors(bookForm.type) }}</div>
                         </div>
 
                         <div class="form-control w-full max-w-xs">
