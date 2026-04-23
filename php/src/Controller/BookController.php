@@ -10,9 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/book', name: 'app_book_')]
 final class BookController extends AbstractController
 {
-    #[Route('/book/add', name: 'app_book', methods: ['GET', 'POST'])]
+    #[Route('/add', name: 'add', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $book = new Book();
