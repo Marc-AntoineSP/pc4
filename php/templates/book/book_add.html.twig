@@ -1,0 +1,70 @@
+{% extends 'layout/SidebarLayout.html.twig' %}
+
+{% block title %}Add book page{% endblock %}
+
+{% block main_content %}
+    <div class="drawer-content flex h-screen flex-col overflow-hidden">
+        <main class="mx-auto flex h-full w-full max-w-4xl flex-col overflow-auto p-4 lg:p-8">
+            <header class="mb-6 border-b-2 border-primary/10 pb-4">
+                <h1 class="text-4xl font-serif font-bold text-primary lg:text-5xl">Add a New Book</h1>
+                <p class="mt-2 text-sm italic opacity-70 lg:text-base">Create a volume in the catalog with the form below.</p>
+            </header>
+
+            {% for message in app.flashes('success') %}
+                <div role="alert" class="alert alert-success mb-4">
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+
+            <section class="card border border-primary/25 bg-primary/5 shadow-[0_20px_44px_rgba(61,30,26,0.22)]">
+                <div class="card-body gap-5 p-6 sm:p-8">
+                    {{ form_start(bookForm, { attr: { class: 'space-y-5' } }) }}
+                        <div class="form-control w-full">
+                            <div class="label px-0 pb-2">
+                                {{ form_label(bookForm.title, null, { label_attr: { class: 'label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/75' } }) }}
+                            </div>
+                            {{ form_widget(bookForm.title, { attr: { class: 'input input-bordered w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none', placeholder: 'Book title' } }) }}
+                            <div class="mt-1 text-sm text-error">{{ form_errors(bookForm.title) }}</div>
+                        </div>
+
+                        <div class="form-control w-full">
+                            <div class="label px-0 pb-2">
+                                {{ form_label(bookForm.description, null, { label_attr: { class: 'label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/75' } }) }}
+                            </div>
+                            {{ form_widget(bookForm.description, { attr: { class: 'textarea textarea-bordered min-h-24 w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none', placeholder: 'Description' } }) }}
+                            <div class="mt-1 text-sm text-error">{{ form_errors(bookForm.description) }}</div>
+                        </div>
+
+                        <div class="form-control w-full">
+                            <div class="label px-0 pb-2">
+                                {{ form_label(bookForm.summary, null, { label_attr: { class: 'label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/75' } }) }}
+                            </div>
+                            {{ form_widget(bookForm.summary, { attr: { class: 'textarea textarea-bordered min-h-32 w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none', placeholder: 'Summary' } }) }}
+                            <div class="mt-1 text-sm text-error">{{ form_errors(bookForm.summary) }}</div>
+                        </div>
+
+                        <div class="form-control w-full max-w-xs">
+                            <div class="label px-0 pb-2">
+                                {{ form_label(bookForm.pages, null, { label_attr: { class: 'label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/75' } }) }}
+                            </div>
+                            {{ form_widget(bookForm.pages, { attr: { class: 'input input-bordered w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none', min: 1, placeholder: '320' } }) }}
+                            <div class="mt-1 text-sm text-error">{{ form_errors(bookForm.pages) }}</div>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label cursor-pointer justify-start gap-3 px-0">
+                                {{ form_widget(bookForm.isAvailable, { attr: { class: 'checkbox rounded-none border-base-300 bg-base-100 [--chkbg:var(--color-primary)] [--chkfg:var(--color-primary-content)]' } }) }}
+                                <span class="label-text font-sans text-sm text-primary/90">{{ bookForm.isAvailable.vars.label }}</span>
+                            </label>
+                            <div class="mt-1 text-sm text-error">{{ form_errors(bookForm.isAvailable) }}</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary rounded-none font-sans text-xs uppercase tracking-[0.24em]">
+                            Save Book
+                        </button>
+                    {{ form_end(bookForm) }}
+                </div>
+            </section>
+        </main>
+    </div>
+{% endblock %}
