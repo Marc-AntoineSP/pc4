@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\BookTypeEnum;
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,6 +28,12 @@ class Book
 
     #[ORM\Column]
     private ?bool $isAvailable = null;
+
+    #[ORM\Column(enumType: BookTypeEnum::class)]
+    private ?BookTypeEnum $type = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $author = null;
 
     public function getId(): ?int
     {
@@ -89,6 +96,30 @@ class Book
     public function setIsAvailable(bool $isAvailable): static
     {
         $this->isAvailable = $isAvailable;
+
+        return $this;
+    }
+
+    public function getType(): ?BookTypeEnum
+    {
+        return $this->type;
+    }
+
+    public function setType(BookTypeEnum $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?string
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(string $author): static
+    {
+        $this->author = $author;
 
         return $this;
     }
