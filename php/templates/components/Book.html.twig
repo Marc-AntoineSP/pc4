@@ -2,11 +2,13 @@
 {# @prop type string #}
 {# @prop author string #}
 {# @prop available bool|string #}
+{# @prop showAvailability bool|string #}
 
-{%- props title = "N/A", type = "N/A", author = "N/A", available = true -%}
+{%- props title = "N/A", type = "N/A", author = "N/A", available = true, showAvailability = true -%}
 {% set isAvailable = available is same as(true) or available == 'true' or available == 1 or available == '1' %}
+{% set shouldShowAvailability = showAvailability is same as(true) or showAvailability == 'true' or showAvailability == 1 or showAvailability == '1' %}
 
-<div class="group cursor-pointer">
+<div class="group h-full w-full cursor-pointer">
     <div class="relative flex h-full min-h-[13rem] flex-col overflow-hidden border border-[#dccba8] bg-[linear-gradient(180deg,#f5ecd9_0%,#ecdfc2_100%)] px-4 py-3 shadow-[0_10px_20px_rgba(61,30,26,0.12)] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_14px_24px_rgba(61,30,26,0.18)]">
         <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.35),transparent_40%)]"></div>
         <div class="pointer-events-none absolute inset-y-0 left-0 w-3 border-r border-[#d8c29d] bg-[linear-gradient(180deg,#e5d2ae_0%,#d7bf95_100%)]"></div>
@@ -15,17 +17,19 @@
             <h4 class="max-w-[10ch] text-[1.15rem] leading-[1.05] font-serif font-bold text-primary">{{ title }}</h4>
             <p class="mt-1 text-[10px] text-primary/65">{{ author }}</p>
         </div>
-        <div class="relative mt-auto flex items-end justify-between pl-2 pt-6">
-            {% if isAvailable %}
-                <div class="flex items-center gap-1.5 text-[9px] font-sans font-bold uppercase tracking-[0.18em] text-primary/70">
-                    <span class="inline-block h-2 w-2 rounded-full bg-success shadow-[0_0_0_2px_rgba(79,121,66,0.12)]"></span>
-                    <span>Available for loan</span>
-                </div>
-            {% else %}
-                <div class="flex items-center gap-1.5 text-[9px] font-sans font-bold uppercase tracking-[0.18em] text-primary/70">
-                    <span class="inline-block h-2 w-2 rounded-full bg-error shadow-[0_0_0_2px_rgba(79,121,66,0.12)]"></span>
-                    <span>Not available atm</span>
-                </div>
+        <div class="relative mt-auto flex items-end justify-between pl-2 {{ shouldShowAvailability ? 'pt-6' : 'pt-3' }}">
+            {% if shouldShowAvailability %}
+                {% if isAvailable %}
+                    <div class="flex items-center gap-1.5 text-[9px] font-sans font-bold uppercase tracking-[0.18em] text-primary/70">
+                        <span class="inline-block h-2 w-2 rounded-full bg-success shadow-[0_0_0_2px_rgba(79,121,66,0.12)]"></span>
+                        <span>Available for loan</span>
+                    </div>
+                {% else %}
+                    <div class="flex items-center gap-1.5 text-[9px] font-sans font-bold uppercase tracking-[0.18em] text-primary/70">
+                        <span class="inline-block h-2 w-2 rounded-full bg-error shadow-[0_0_0_2px_rgba(79,121,66,0.12)]"></span>
+                        <span>Not available atm</span>
+                    </div>
+                {% endif %}
             {% endif %}
             <div class="flex h-5 w-5 items-center justify-center rounded-full border border-[#d5bc93] bg-[radial-gradient(circle,#f7edd8_0%,#e7d5b4_70%,#d4bb8f_100%)] shadow-inner">
                 <div class="h-1.5 w-1.5 rounded-full bg-[#c7ab78]"></div>

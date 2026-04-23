@@ -1,0 +1,42 @@
+{% extends 'layout/SidebarLayout.html.twig' %}
+
+{% block title %}All books{% endblock %}
+
+{% block main_content %}
+    <div class="drawer-content flex h-screen flex-col overflow-hidden book-catalog-page">
+        <main class="mx-auto flex h-full w-full max-w-7xl flex-col overflow-auto p-4 lg:p-8">
+            <header class="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-primary-content/20 pb-4">
+                <div>
+                    <h1 class="text-4xl font-serif font-bold lg:text-5xl">All books</h1>
+                    <p class="mt-2 text-sm italic text-primary-content/70 lg:text-base">Every volume currently available in the catalog.</p>
+                </div>
+                <div class="badge badge-secondary badge-outline rounded-none px-4 py-3 font-sans text-[11px] font-bold uppercase tracking-[0.22em]">
+                    {{ books|length }} books
+                </div>
+            </header>
+
+            {% if books is empty %}
+                <div role="alert" class="alert border-primary-content/30 bg-base-100/10 text-primary-content shadow-lg">
+                    <span>No books in the database yet.</span>
+                </div>
+            {% else %}
+                <section class="card book-catalog-grid-shell">
+                    <div class="card-body p-4 sm:p-6">
+                        <div class="book-catalog-grid grid gap-4">
+                            {% for book in books %}
+                                <div class="book-catalog-card">
+                                    <twig:Book
+                                        title="{{ book.title }}"
+                                        type="{{ book.pages }} pages"
+                                        author="{{ book.description }}"
+                                        showAvailability="false"
+                                    />
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
+        </main>
+    </div>
+{% endblock %}

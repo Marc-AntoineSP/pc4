@@ -43,3 +43,29 @@
     --noise: 0;
   }
 }
+
+@layer components {
+  .book-catalog-page {
+    background-color: var(--color-primary);
+    color: var(--color-primary-content);
+    box-shadow:
+      inset 0 0 0 1px rgba(245, 230, 211, 0.12),
+      0 28px 55px rgba(23, 11, 9, 0.38);
+  }
+
+  .book-catalog-grid-shell {
+    background-color: rgba(245, 230, 211, 0.08);
+    border: 1px solid rgba(245, 230, 211, 0.16);
+    box-shadow: 0 24px 42px rgba(16, 7, 6, 0.34);
+  }
+
+  .book-catalog-grid {
+    grid-template-columns: repeat(auto-fill, minmax(clamp(10.5rem, 24vw, 14rem), 1fr));
+    justify-items: center;
+  }
+
+  .book-catalog-card {
+    width: clamp(10.5rem, 24vw, 14rem);
+    aspect-ratio: 2 / 3;
+  }
+}
