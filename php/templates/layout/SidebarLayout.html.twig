@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 {%  block body %}
+
+    {% set routeName = app.request.attributes.get('_route') %}
+
 <div class="drawer h-screen w-full overflow-hidden lg:drawer-open">
     <input class="drawer-toggle" id="main-drawer" type="checkbox"/>
     <div class="drawer-side z-40">
@@ -11,10 +14,10 @@
             </div>
             <ul class="menu p-0 flex-1 space-y-1 mt-4">
                 <li>
-                    <twig:Sidebar:NavItem content="My Books" icon="flowbite:book-solid" active="true"/>
+                    <twig:Sidebar:NavItem content="Home" icon="flowbite:book-solid" href="{{ path('app_home') }}" active="{{ routeName == 'app_home' ? 'true' : 'false' }}"/>
                 </li>
                 <li>
-                    <twig:Sidebar:NavItem content="All books" icon="iconoir:book-stack" />
+                    <twig:Sidebar:NavItem content="All books" icon="iconoir:book-stack" href="{{ path('app_book_all') }}" active="{{ routeName == 'app_book_all' ? 'true' : 'false' }}" />
                 </li>
                 <li>
                     <twig:Sidebar:NavItem content="New books" icon="material-symbols:newspaper" />
