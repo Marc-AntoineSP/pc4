@@ -42,4 +42,12 @@ final class BookController extends AbstractController
             'books' => $books,
         ]);
     }
+
+    #[Route('/{id}', name: 'detail', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function detail(Book $book): Response
+    {
+        return $this->render('book/book_detail.html.twig', [
+            'book' => $book,
+        ]);
+    }
 }
