@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Book;
+use App\Entity\User;
 use App\Form\BookCreationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,5 +50,25 @@ final class BookController extends AbstractController
         return $this->render('book/book_detail.html.twig', [
             'book' => $book,
         ]);
+    }
+
+    #[Route('/{id}/loan', name: 'loan', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function loan(Book $book, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isCsrfTokenValid('loan_book_'.$book->getId(), (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Invalid loan request.');
+
+            return $this->redirectToRoute('app_book_detail', ['id' => $book->getId()]);
+        }
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $user->addBook($book);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_book_detail', ['id' => $book->getId()]);
     }
 }

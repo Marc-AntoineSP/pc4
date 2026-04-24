@@ -138,6 +138,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->books->contains($book)) {
             $this->books->add($book);
             $book->setUserEntity($this);
+            $book->setIsAvailable(false);
         }
 
         return $this;
@@ -149,6 +150,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($book->getUserEntity() === $this) {
                 $book->setUserEntity(null);
+                $book->setIsAvailable(true);
             }
         }
 

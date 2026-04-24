@@ -35,6 +35,12 @@
                             linkToDetail="false"
                         />
                     </div>
+                    <form method="post" action="{{ path('app_book_loan', { id: book.id }) }}" class="mt-4">
+                        <input type="hidden" name="_token" value="{{ csrf_token('loan_book_' ~ book.id) }}">
+                        <button type="submit" class="btn btn-secondary btn-lg w-full rounded-none font-sans text-base font-bold tracking-[0.18em] text-secondary-content">
+                            LOAN ME
+                        </button>
+                    </form>
                 </aside>
 
                 <section class="book-detail-text">
