@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class BookCreationType extends AbstractType
 {
@@ -29,12 +30,28 @@ class BookCreationType extends AbstractType
                 'attr' => [
                     'rows' => 3,
                 ],
+                'constraints' => [
+                    new Length(
+                        min: 0,
+                        max: 1000,
+                        minMessage: 'Summary must be at least {{ limit }} characters long.',
+                        maxMessage: 'Summary cannot be longer than {{ limit }} characters.',
+                    ),
+                ]
             ])
             ->add('summary', TextareaType::class, [
                 'label' => 'Summary',
                 'attr' => [
                     'rows' => 5,
                 ],
+                'constraints' => [
+                    new Length(
+                        min: 10,
+                        max: 5000,
+                        minMessage: 'Summary must be at least {{ limit }} characters long.',
+                        maxMessage: 'Summary cannot be longer than {{ limit }} characters.',
+                    ),
+                ]
             ])
             ->add('type', EnumType::class, [
                 'class' => BookTypeEnum::class,

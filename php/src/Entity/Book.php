@@ -17,10 +17,10 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 1000)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 5000)]
     private ?string $summary = null;
 
     #[ORM\Column]
@@ -34,6 +34,14 @@ class Book
 
     #[ORM\Column(length: 255)]
     private ?string $author = null;
+
+    #[ORM\Column(length: 255)]
+    private ?\DateTimeImmutable $publishedAt;
+
+    public function __construct()
+    {
+        $this->publishedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
