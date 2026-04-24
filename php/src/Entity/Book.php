@@ -38,6 +38,9 @@ class Book
     #[ORM\Column(length: 255)]
     private ?\DateTimeImmutable $publishedAt;
 
+    #[ORM\ManyToOne(inversedBy: 'books')]
+    private ?User $userEntity = null;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTimeImmutable();
@@ -128,6 +131,18 @@ class Book
     public function setAuthor(string $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getUserEntity(): ?User
+    {
+        return $this->userEntity;
+    }
+
+    public function setUserEntity(?User $userEntity): static
+    {
+        $this->userEntity = $userEntity;
 
         return $this;
     }
