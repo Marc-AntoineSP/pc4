@@ -1,17 +1,25 @@
+{# @prop id int|string|null #}
 {# @prop title string #}
 {# @prop type string #}
 {# @prop author string #}
 {# @prop pages int|string|null #}
 {# @prop available bool|string #}
 {# @prop showAvailability bool|string #}
+{# @prop linkToDetail bool|string #}
 
-{%- props title = "N/A", type = "N/A", author = "N/A", pages = null, available = true, showAvailability = true -%}
+{%- props id = null, title = "N/A", type = "N/A", author = "N/A", pages = null, available = true, showAvailability = true, linkToDetail = true -%}
 {% set isAvailable = available is same as(true) or available == 'true' or available == 1 or available == '1' %}
 {% set shouldShowAvailability = showAvailability is same as(true) or showAvailability == 'true' or showAvailability == 1 or showAvailability == '1' %}
 {% set hasPages = pages is not same as(null) and pages != '' %}
+{% set hasDetailId = id is not same as(null) and id != '' %}
+{% set canLinkToDetail = (linkToDetail is same as(true) or linkToDetail == 'true' or linkToDetail == 1 or linkToDetail == '1') and hasDetailId %}
 
-<div class="group h-full w-full cursor-pointer">
-    <div class="relative flex h-full min-h-[13rem] flex-col overflow-hidden border border-[#dccba8] bg-[linear-gradient(180deg,#f5ecd9_0%,#ecdfc2_100%)] px-4 py-3 shadow-[0_10px_20px_rgba(61,30,26,0.12)] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_14px_24px_rgba(61,30,26,0.18)]">
+{% if canLinkToDetail %}
+    <a href="{{ path('app_book_detail', { id: id }) }}" class="group block h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Open details for {{ title }}">
+{% else %}
+    <div class="group h-full w-full">
+{% endif %}
+    <div class="relative flex h-full min-h-[13rem] flex-col overflow-hidden border border-[#dccba8] bg-[linear-gradient(180deg,#f5ecd9_0%,#ecdfc2_100%)] px-4 py-3 shadow-[0_10px_20px_rgba(61,30,26,0.12)] transition-all duration-300 {{ canLinkToDetail ? 'cursor-pointer group-hover:-translate-y-1 group-hover:shadow-[0_14px_24px_rgba(61,30,26,0.18)]' : 'cursor-default' }}">
         <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.35),transparent_40%)]"></div>
         <div class="pointer-events-none absolute inset-y-0 left-0 w-3 border-r border-[#d8c29d] bg-[linear-gradient(180deg,#e5d2ae_0%,#d7bf95_100%)]"></div>
         <div class="relative pl-2">
@@ -45,4 +53,8 @@
             </div>
         </div>
     </div>
-</div>
+{% if canLinkToDetail %}
+    </a>
+{% else %}
+    </div>
+{% endif %}
