@@ -19,6 +19,7 @@ class BookAPIController extends AbstractController
         private EntityManagerInterface $em
     ){
     }
+
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(#[CurrentUser] ?User $user): JsonResponse
     {
@@ -37,5 +38,44 @@ class BookAPIController extends AbstractController
         return new JsonResponse(
             $books,
         );
+    }
+
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    public function show(#[CurrentUser] ?User $user, int $id): JsonResponse
+    {
+        if($user === null) {
+            return $this->json(['message' => 'Unauthorized'], 401);
+        }
+        $book = $this->em->getRepository(Book::class)->find($id);
+        if ($book === null) {
+            return $this->json(['message' => 'Book not found'], 404);
+        }
+        return new JsonResponse([
+            'id' => $book->getId(),
+            'title' => $book->getTitle(),
+            'author' => $book->getAuthor(),
+            'publishedDate' => $book->getPublishedAt()->format('Y-m-d'),
+            'description' => $book->getDescription(),
+            'pages' => $book->getPages(),
+            'isAvailable' => $book->isAvailable(),
+            'type' => $book->getType()->value,
+        ]);
+    }
+
+    #[Route('/{id}/summary', name: 'summary', methods: ['GET'])]
+    public function summary(#[CurrentUser] ?User $user, int $id): JsonResponse
+    {
+        if($user === null) {
+            return $this->json(['message' => 'Unauthorized'], 401);
+        }
+        $book = $this->em->getRepository(Book::class)->find($id);
+        if ($book === null) {
+            return $this->json(['message' => 'Book not found'], 404);
+        }
+        return new JsonResponse([
+            'id' => $book->getId(),
+            'title' => $book->getTitle(),
+            'summary' => $book->getSummary(),
+        ]);
     }
 }
