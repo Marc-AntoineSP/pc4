@@ -26,6 +26,7 @@
                             {% for book in books %}
                                 <div class="book-catalog-card">
                                     <twig:Book
+                                        id="{{ book.id }}"
                                         title="{{ book.title }}"
                                         type="{{ book.type.label() }}"
                                         author="{{ book.author }}"
