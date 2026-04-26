@@ -51,6 +51,7 @@
                                         </div>
                                         <form method="post" action="{{ path('app_book_return', { id: book.id }) }}" class="mt-4">
                                             <input type="hidden" name="_token" value="{{ csrf_token('return_book_' ~ book.id) }}">
+                                            <input type="hidden" name="_redirect_route" value="app_book_me">
                                             <button type="submit" class="btn btn-lg btn-secondary w-full rounded-none font-sans text-base font-bold tracking-[0.18em] text-secondary-content">
                                                 RETURN BOOK
                                             </button>
