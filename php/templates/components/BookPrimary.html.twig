@@ -1,21 +1,27 @@
+{# @prop id int|string|null #}
 {# prop title string #}
 {# prop description string #}
 {# prop author string #}
 
-{% props title = "N/A", description = "N/A", author = "N/A" %}
+{% props id = null, title = "N/A", description = "N/A", author = "N/A" %}
+{% set hasDetailId = id is not same as(null) and id != '' %}
 
-<div class="group relative flex flex-col gap-6 overflow-hidden border border-base-300 p-6 book-shadow md:flex-row lg:col-span-2">
+<div class="group relative flex flex-col gap-6 overflow-hidden border border-base-300 p-6 pt-12 book-shadow md:flex-row md:pt-10 lg:col-span-2">
+    <span class="absolute top-0 left-0 p-4 text-xs font-sans font-bold uppercase tracking-widest text-accent">Featured Book</span>
     <div class="absolute inset-y-0 left-1/2 w-px bg-black/10 shadow-[0_0_10px_rgba(0,0,0,0.1)] hidden md:block"></div>
     <div class="flex-1 flex flex-col justify-center">
-        <span class="mb-2 text-xs font-sans font-bold uppercase tracking-widest text-accent">Featured Book</span>
-        <h2 class="mb-3 text-2xl leading-tight font-serif font-bold text-primary lg:text-3xl">Je sais pas quoi mettre mais c'est cool comme titre</h2>
+        <h2 class="mb-3 text-2xl leading-tight font-serif font-bold text-primary lg:text-3xl">{{ title }}</h2>
         <p class="mb-4 text-sm leading-relaxed italic opacity-80">
-            "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            "{{ description }}"
         </p>
     </div>
     <div class="flex-1 flex flex-col items-center justify-center text-center p-4 border-l-0 md:border-l border-base-300/30">
         <p class="mb-3 text-2xl leading-tight font-serif font-bold text-primary lg:text-3xl">Author : {{ author }}</p>
         <p class="mb-3 font-serif text-lg italic">Votre livre en cours</p>
-        <button class="btn btn-primary rounded-none px-8 font-sans uppercase tracking-widest text-xs">Accès résumé</button>
+        {% if hasDetailId %}
+            <a href="{{ path('app_book_detail', { id: id }) }}" class="btn btn-primary rounded-none px-8 font-sans uppercase tracking-widest text-xs">Acces résumé</a>
+        {% else %}
+            <button class="btn btn-primary rounded-none px-8 font-sans uppercase tracking-widest text-xs btn-disabled" type="button" disabled>Acces résumé</button>
+        {% endif %}
     </div>
 </div>
