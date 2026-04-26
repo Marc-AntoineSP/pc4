@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Entity\User;
 use App\Form\BookCreationType;
+use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,10 +37,10 @@ final class BookController extends AbstractController
     }
 
     #[Route('/all', name: 'all', methods: ['GET'])]
-    public function all(EntityManagerInterface $entityManager): Response
+    public function all(BookRepository $bookRepository): Response
     {
-        $books = $entityManager->getRepository(Book::class)->findAll();
-        $books = array_filter($books, static fn(Book $book) => $book->isOnline());
+        $books = $bookRepository->findOnlineOrderedByPublishedAtDesc();
+
         return $this->render('book/book_all.html.twig', [
             'books' => $books,
         ]);
