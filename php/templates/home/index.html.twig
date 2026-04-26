@@ -28,21 +28,38 @@
                     <h1 class="mb-2 text-4xl font-serif font-bold text-primary lg:text-5xl">The Master Catalog</h1>
                     <p class="max-w-xl text-sm opacity-70 italic lg:text-base">Lorem ipsum bon bah il veut pas autocomplete. Bah un texte je sais pas quoi en fait.</p>
                 </div>
-                <twig:BookTracking volumes="1482" reserved="84"/>
+                <twig:BookTracking volumes="{{ total }}" reserved="{{ loaned }}"/>
             </div>
             <div class="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-                <twig:BookPrimary title="Je sais pas quoi mettre mais c'est cool comme titre" description="lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." author="Jean Dupont"/>
-                <twig:BookSecondary title="Les chroniques d'un DI en 2026" author="Jean-Luc" date="2026"/>
+                <twig:BookPrimary
+                    id="{{ featuredBook ? featuredBook.id : null }}"
+                    title="{{ featuredBook ? featuredBook.title : 'No featured book available' }}"
+                    description="{{ featuredDescription }}"
+                    author="{{ featuredBook ? featuredBook.author : 'N/A' }}"
+                />
+                {% if collectionBook %}
+                    <twig:BookSecondary
+                        title="{{ collectionBook.title }}"
+                        author="{{ collectionBook.author }}"
+                        date="{{ collectionBook.publishedAt ? collectionBook.publishedAt|date('Y') : 'N/A' }}"
+                    />
+                {% endif %}
             </div>
             <div class="mb-4 flex items-center justify-between border-b-2 border-primary/10 pb-3">
                 <h3 class="text-xl font-serif font-bold text-primary">Latest Additions</h3>
                 <button class="btn btn-link btn-xs text-primary font-sans uppercase tracking-widest no-underline hover:underline">View All</button>
             </div>
             <div class="grid min-h-0 flex-1 grid-cols-2 gap-4 lg:grid-cols-4">
-                <twig:Book type="Fiction" title="Les mésaventures du cube 1" author="Py. Thon" available="true" />
-                <twig:Book type="Non-Fiction" title="PHP, tu l'aimes ou tu le quittes" author="Mec bizarre" available="true" />
-                <twig:Book type="Rare Editions" title="Pourquoi j'aime CSS" author="Jean-Michel Délu" available="true" />
-                <twig:Book type="Drame" title="Typescript > Javascript, une guerre sans fin" author="DI Press" available="false" />
+                {% for book in latestOnlineBook %}
+                    <twig:Book
+                        id="{{ book.id }}"
+                        type="{{ book.type ? book.type.label() : 'Unclassified' }}"
+                        title="{{ book.title }}"
+                        author="{{ book.author }}"
+                        pages="{{ book.pages }}"
+                        available="{{ book.isAvailable ? 'true' : 'false' }}"
+                    />
+                {% endfor %}
             </div>
         </main>
     </div>
