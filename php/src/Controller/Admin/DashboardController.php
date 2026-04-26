@@ -25,5 +25,10 @@ class DashboardController extends AbstractDashboardController
             label: 'Books',
             icon: 'fa fa-book'
         );
+        yield MenuItem::linkTo(
+            controllerFqcn: UserCrudController::class,
+            label: 'Users',
+            icon: 'fa fa-users'
+        );
     }
 }
