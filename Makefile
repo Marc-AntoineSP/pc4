@@ -15,6 +15,7 @@ up:
 	@test -f "$(ENV_FILE)" || (echo "Missing $(ENV_FILE)" && exit 1)
 	@test -f "$(COMPOSE_FILE)" || (echo "Unsupported ENV=$(ENV). Expected dev, staging, or prod." && exit 1)
 	$(COMPOSE) up -d
+	make bash
 
 down:
 	@test -f "$(ENV_FILE)" || (echo "Missing $(ENV_FILE)" && exit 1)
