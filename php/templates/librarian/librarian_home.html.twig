@@ -5,13 +5,32 @@
 {% block main_content %}
     <div class="drawer-content h-screen overflow-y-auto bg-base-200/40">
         <main class="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 lg:p-8">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success shadow">
+                    <twig:ux:icon name="mdi:check-circle-outline" class="h-5 w-5 shrink-0" />
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('warning') %}
+                <div class="alert alert-warning shadow">
+                    <twig:ux:icon name="mdi:alert-outline" class="h-5 w-5 shrink-0" />
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-error shadow">
+                    <twig:ux:icon name="mdi:close-circle-outline" class="h-5 w-5 shrink-0" />
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+
             <section class="hero rounded-box border border-primary/15 bg-base-100 shadow-xl">
                 <div class="hero-content w-full justify-between gap-6 px-6 py-7 max-md:flex-col max-md:items-start">
                     <div class="space-y-2">
                         <span class="badge badge-secondary badge-outline">Librarian Admin</span>
                         <h1 class="text-3xl font-black text-primary">Library Dashboard</h1>
                         <p class="text-sm text-base-content/70">
-                            Live overview of your collection, active loans, and non-admin members.
+                            Live overview of your collection, active loans, and memberships.
                         </p>
                     </div>
                     <a class="btn btn-primary" href="{{ path('app_book_add') }}">
@@ -52,32 +71,39 @@
                 <div class="card-body gap-4">
                     <div class="flex items-center justify-between gap-4 max-sm:flex-col max-sm:items-start">
                         <h2 class="card-title text-primary">CSV Upload</h2>
-                        <span class="badge badge-warning">Planned</span>
                     </div>
                     <p class="text-sm text-base-content/70">
-                        This section is ready for upcoming CSV import flow.
+                        Expected columns: title, description, pages (or page), author, summary, type.
                     </p>
-                    <div class="form-control w-full gap-2">
-                        <label class="label" for="csv-upload-input">
-                            <span class="label-text font-semibold">Select file</span>
-                        </label>
-                        <input
-                            class="file-input file-input-bordered file-input-primary w-full"
-                            id="csv-upload-input"
-                            name="csv-upload"
-                            type="file"
-                            accept=".csv,text/csv"
-                        />
-                        <p class="label">
-                            <span class="label-text-alt">Accepted format: CSV</span>
-                        </p>
-                    </div>
-                    <div class="alert alert-info">
-                        <twig:ux:icon name="mdi:information-outline" class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="card-actions justify-end">
-                        <button class="btn btn-primary btn-disabled" type="button">Upload CSV (soon)</button>
-                    </div>
+                    <form action="{{ path('librarian_upload') }}" class="space-y-4" enctype="multipart/form-data" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('librarian_csv_upload') }}">
+
+                        <div class="form-control w-full gap-2">
+                            <label class="label" for="csv-upload-input">
+                                <span class="label-text font-semibold">Select file</span>
+                            </label>
+                            <input
+                                class="file-input file-input-bordered file-input-primary w-full"
+                                id="csv-upload-input"
+                                name="csv_upload"
+                                type="file"
+                                accept=".csv,text/csv"
+                                required
+                            />
+                            <p class="label">
+                                <span class="label-text-alt">Accepted format: CSV</span>
+                            </p>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <twig:ux:icon name="mdi:information-outline" class="h-5 w-5 shrink-0" />
+                            <span>is_available from CSV is ignored. Availability stays managed by entity defaults.</span>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button class="btn btn-primary" type="submit">Upload CSV</button>
+                        </div>
+                    </form>
                 </div>
             </section>
         </main>
