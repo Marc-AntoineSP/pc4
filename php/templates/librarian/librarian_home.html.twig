@@ -1,0 +1,85 @@
+{% extends 'layout/SidebarLayout.html.twig' %}
+
+{% block title %}Librarian Dashboard{% endblock %}
+
+{% block main_content %}
+    <div class="drawer-content h-screen overflow-y-auto bg-base-200/40">
+        <main class="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 lg:p-8">
+            <section class="hero rounded-box border border-primary/15 bg-base-100 shadow-xl">
+                <div class="hero-content w-full justify-between gap-6 px-6 py-7 max-md:flex-col max-md:items-start">
+                    <div class="space-y-2">
+                        <span class="badge badge-secondary badge-outline">Librarian Admin</span>
+                        <h1 class="text-3xl font-black text-primary">Library Dashboard</h1>
+                        <p class="text-sm text-base-content/70">
+                            Live overview of your collection, active loans, and non-admin members.
+                        </p>
+                    </div>
+                    <a class="btn btn-primary" href="{{ path('app_book_add') }}">
+                        <twig:ux:icon name="solar:book-bookmark-bold" class="h-5 w-5" />
+                        Add book
+                    </a>
+                </div>
+            </section>
+
+            <section class="stats stats-vertical w-full border border-primary/15 bg-base-100 shadow-xl lg:stats-horizontal">
+                <div class="stat">
+                    <div class="stat-figure text-primary">
+                        <twig:ux:icon name="flowbite:book-solid" class="h-7 w-7" />
+                    </div>
+                    <div class="stat-title">Books</div>
+                    <div class="stat-value text-primary">{{ booksCount }}</div>
+                    <div class="stat-desc">Total books</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-figure text-warning">
+                        <twig:ux:icon name="heroicons:arrow-path-rounded-square-20-solid" class="h-7 w-7" />
+                    </div>
+                    <div class="stat-title">Loaned books</div>
+                    <div class="stat-value text-warning">{{ loanedBooksCount }}</div>
+                    <div class="stat-desc">Currently loaned</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-figure text-info">
+                        <twig:ux:icon name="material-symbols:groups-rounded" class="h-7 w-7" />
+                    </div>
+                    <div class="stat-title">Users</div>
+                    <div class="stat-value text-info">{{ usersCount }}</div>
+                    <div class="stat-desc">Users</div>
+                </div>
+            </section>
+
+            <section class="card border border-primary/15 bg-base-100 shadow-xl">
+                <div class="card-body gap-4">
+                    <div class="flex items-center justify-between gap-4 max-sm:flex-col max-sm:items-start">
+                        <h2 class="card-title text-primary">CSV Upload</h2>
+                        <span class="badge badge-warning">Planned</span>
+                    </div>
+                    <p class="text-sm text-base-content/70">
+                        This section is ready for upcoming CSV import flow.
+                    </p>
+                    <div class="form-control w-full gap-2">
+                        <label class="label" for="csv-upload-input">
+                            <span class="label-text font-semibold">Select file</span>
+                        </label>
+                        <input
+                            class="file-input file-input-bordered file-input-primary w-full"
+                            id="csv-upload-input"
+                            name="csv-upload"
+                            type="file"
+                            accept=".csv,text/csv"
+                        />
+                        <p class="label">
+                            <span class="label-text-alt">Accepted format: CSV</span>
+                        </p>
+                    </div>
+                    <div class="alert alert-info">
+                        <twig:ux:icon name="mdi:information-outline" class="h-5 w-5 shrink-0" />
+                    </div>
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-primary btn-disabled" type="button">Upload CSV (soon)</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+{% endblock %}
