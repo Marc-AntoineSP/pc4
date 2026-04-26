@@ -117,4 +117,18 @@ final class BookController extends AbstractController
 
         return $this->redirectToRoute('app_book_detail', ['id' => $book->getId()]);
     }
+
+    #[Route(path: "/me", name: "me", methods: "GET")]
+    public function myBooks(): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $books = $user->getBooks();
+        return $this->render('book/book_me.html.twig', [
+            'books' => $books,
+        ]);
+    }
 }
