@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -49,10 +51,12 @@ final class BookController extends AbstractController
     #[Route('/{id}', name: 'detail', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function detail(Book $book): Response
     {
-        if(!$book->isOnline()){
+        if (!$book->isOnline()) {
             $this->addFlash('error', 'This book is not available.');
+
             return $this->redirectToRoute('app_book_all');
         }
+
         return $this->render('book/book_detail.html.twig', [
             'book' => $book,
         ]);
@@ -61,12 +65,13 @@ final class BookController extends AbstractController
     #[Route('/{id}/loan', name: 'loan', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function loan(Book $book, Request $request, EntityManagerInterface $entityManager): Response
     {
-        if(!$book->isOnline()){
+        if (!$book->isOnline()) {
             $this->addFlash('error', 'This book is not available.');
+
             return $this->redirectToRoute('app_book_all');
         }
 
-        if (!$this->isCsrfTokenValid('loan_book_'.$book->getId(), (string) $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('loan_book_' . $book->getId(), (string) $request->request->get('_token'))) {
             $this->addFlash('error', 'Invalid loan request.');
 
             return $this->redirectToRoute('app_book_detail', ['id' => $book->getId()]);
@@ -108,7 +113,7 @@ final class BookController extends AbstractController
         $redirectRoute = $redirectToMyBooks ? 'app_book_me' : 'app_book_detail';
         $redirectParams = $redirectToMyBooks ? [] : ['id' => $book->getId()];
 
-        if (!$this->isCsrfTokenValid('return_book_'.$book->getId(), (string) $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('return_book_' . $book->getId(), (string) $request->request->get('_token'))) {
             $this->addFlash('error', 'Invalid return request.');
 
             return $this->redirectToRoute($redirectRoute, $redirectParams);
@@ -133,7 +138,7 @@ final class BookController extends AbstractController
         return $this->redirectToRoute($redirectRoute, $redirectParams);
     }
 
-    #[Route(path: "/me", name: "me", methods: "GET")]
+    #[Route(path: '/me', name: 'me', methods: 'GET')]
     public function myBooks(): Response
     {
         $user = $this->getUser();
@@ -142,6 +147,7 @@ final class BookController extends AbstractController
         }
 
         $books = $user->getBooks();
+
         return $this->render('book/book_me.html.twig', [
             'books' => $books,
         ]);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -44,7 +46,7 @@ final class HomeController extends AbstractController
     private function pickRandomOnlineBook(BookRepository $bookRepository): ?Book
     {
         $onlineBooks = $bookRepository->findOnlineOrderedByPublishedAtDesc();
-        if ($onlineBooks === []) {
+        if ([] === $onlineBooks) {
             return null;
         }
 
@@ -54,7 +56,7 @@ final class HomeController extends AbstractController
     private function truncateDescription(?string $description, int $maxLength = 240): string
     {
         $normalizedDescription = trim((string) $description);
-        if ($normalizedDescription === '') {
+        if ('' === $normalizedDescription) {
             return 'No description provided.';
         }
 
@@ -62,6 +64,6 @@ final class HomeController extends AbstractController
             return $normalizedDescription;
         }
 
-        return rtrim(mb_substr($normalizedDescription, 0, $maxLength - 3)).'...';
+        return rtrim(mb_substr($normalizedDescription, 0, $maxLength - 3)) . '...';
     }
 }

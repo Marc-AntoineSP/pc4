@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Book;
@@ -37,7 +39,7 @@ class BookCreationType extends AbstractType
                         minMessage: 'Summary must be at least {{ limit }} characters long.',
                         maxMessage: 'Summary cannot be longer than {{ limit }} characters.',
                     ),
-                ]
+                ],
             ])
             ->add('summary', TextareaType::class, [
                 'label' => 'Summary',
@@ -51,7 +53,7 @@ class BookCreationType extends AbstractType
                         minMessage: 'Summary must be at least {{ limit }} characters long.',
                         maxMessage: 'Summary cannot be longer than {{ limit }} characters.',
                     ),
-                ]
+                ],
             ])
             ->add('type', EnumType::class, [
                 'class' => BookTypeEnum::class,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Book;
@@ -24,9 +26,7 @@ class BookRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    /**
-     * @return Book[]
-     */
+    /** @return Book[] */
     public function findOnlineOrderedByPublishedAtDesc(): array
     {
         return $this->createQueryBuilder('book')

@@ -92,6 +92,18 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "phpstan": [
+            "phpstan analyse --configuration=phpstan.dist.neon --memory-limit=2G"
+        ],
+        "phpcs": [
+            "phpcs --standard=phpcs.xml.dist"
+        ],
+        "phpcbf": [
+            "phpcbf --standard=phpcbf.xml.dist"
+        ],
+        "fix": [
+            "php-cs-fixer fix --config=.php-cs-fixer.dist.php --verbose"
         ]
     },
     "conflict": {
@@ -104,7 +116,10 @@
         }
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^13.1",
+        "squizlabs/php_codesniffer": "*",
         "symfony/browser-kit": "8.0.*",
         "symfony/css-selector": "8.0.*",
         "symfony/debug-bundle": "8.0.*",

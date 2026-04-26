@@ -17,13 +17,13 @@ class BookAPIController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em
-    ){
+    ) {
     }
 
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(#[CurrentUser] ?User $user): JsonResponse
     {
-        if($user === null) {
+        if (null === $user) {
             return $this->json(['message' => 'Unauthorized'], 401);
         }
         $books = $this->em->getRepository(Book::class)->findAll();
@@ -35,6 +35,7 @@ class BookAPIController extends AbstractController
                 'publishedDate' => $book->getPublishedAt()->format('Y-m-d'),
             ];
         }, $books);
+
         return new JsonResponse(
             $books,
         );
@@ -43,13 +44,14 @@ class BookAPIController extends AbstractController
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(#[CurrentUser] ?User $user, int $id): JsonResponse
     {
-        if($user === null) {
+        if (null === $user) {
             return $this->json(['message' => 'Unauthorized'], 401);
         }
         $book = $this->em->getRepository(Book::class)->find($id);
-        if ($book === null) {
+        if (null === $book) {
             return $this->json(['message' => 'Book not found'], 404);
         }
+
         return new JsonResponse([
             'id' => $book->getId(),
             'title' => $book->getTitle(),
@@ -65,13 +67,14 @@ class BookAPIController extends AbstractController
     #[Route('/{id}/summary', name: 'summary', methods: ['GET'])]
     public function summary(#[CurrentUser] ?User $user, int $id): JsonResponse
     {
-        if($user === null) {
+        if (null === $user) {
             return $this->json(['message' => 'Unauthorized'], 401);
         }
         $book = $this->em->getRepository(Book::class)->find($id);
-        if ($book === null) {
+        if (null === $book) {
             return $this->json(['message' => 'Book not found'], 404);
         }
+
         return new JsonResponse([
             'id' => $book->getId(),
             'title' => $book->getTitle(),

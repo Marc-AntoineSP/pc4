@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\Book;
@@ -8,23 +10,19 @@ use App\Repository\BookRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
 
 #[Route('/librarian', name: 'librarian_')]
 final class AdminController extends AbstractController
 {
-    /**
-     * @var array<string>
-     */
+    /** @var array<string> */
     private const REQUIRED_CSV_FIELDS = ['title', 'description', 'author', 'summary', 'type'];
 
-    /**
-     * @var array<string>
-     */
+    /** @var array<string> */
     private const IGNORED_CSV_FIELDS = ['is_available', 'published_at'];
 
     #[Route('/', name: 'home')]
@@ -78,14 +76,14 @@ final class AdminController extends AbstractController
             return $this->redirectToRoute('librarian_home');
         }
 
-        if (!is_array($decodedRows) || $decodedRows === []) {
+        if (!is_array($decodedRows) || [] === $decodedRows) {
             $this->addFlash('error', 'CSV file is empty.');
 
             return $this->redirectToRoute('librarian_home');
         }
 
         $headerRow = array_shift($decodedRows);
-        if (!is_array($headerRow) || $headerRow === []) {
+        if (!is_array($headerRow) || [] === $headerRow) {
             $this->addFlash('error', 'CSV headers are missing or invalid.');
 
             return $this->redirectToRoute('librarian_home');
@@ -98,7 +96,7 @@ final class AdminController extends AbstractController
 
         $headerIndexes = [];
         foreach ($normalizedHeaders as $index => $header) {
-            if ($header !== '') {
+            if ('' !== $header) {
                 $headerIndexes[$header] = $index;
             }
         }
@@ -120,7 +118,13 @@ final class AdminController extends AbstractController
             }
         }
 
-        $pageField = array_key_exists('pages', $headerIndexes) ? 'pages' : (array_key_exists('page', $headerIndexes) ? 'page' : null);
+        $pageField =
+            array_key_exists('pages', $headerIndexes) ?
+                'pages' :
+                (
+                    array_key_exists('page', $headerIndexes) ?
+                        'page' : null
+                );
         if (null === $pageField) {
             $this->addFlash('error', 'CSV is missing required column "pages" (or "page").');
 
@@ -202,13 +206,11 @@ final class AdminController extends AbstractController
         };
     }
 
-    /**
-     * @param array<int, mixed> $row
-     */
+    /** @param array<int, mixed> $row */
     private static function isCsvRowEmpty(array $row): bool
     {
         foreach ($row as $value) {
-            if (trim((string) $value) !== '') {
+            if ('' !== trim((string) $value)) {
                 return false;
             }
         }

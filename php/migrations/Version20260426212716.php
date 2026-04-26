@@ -22,7 +22,7 @@ final class Version20260426212716 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE book ALTER is_online DROP DEFAULT');
         $this->addSql('ALTER TABLE "user" ADD status VARCHAR(255) DEFAULT NULL');
-        $this->addSql("UPDATE \"user\" SET status = 'active' WHERE status IS NULL");
+        $this->addSql('UPDATE "user" SET status = \'active\' WHERE status IS NULL');
         $this->addSql('ALTER TABLE "user" ALTER status SET NOT NULL');
     }
 

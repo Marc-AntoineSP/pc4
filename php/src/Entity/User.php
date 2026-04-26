@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Enum\UserStatusEnum;
@@ -24,30 +26,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
+    /** @var list<string> The user roles */
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
+    /** @var string The hashed password */
     #[ORM\Column]
     private ?string $password = null;
 
-    /**
-     * @var Collection<int, Book>
-     */
+    /** @var Collection<int, Book> */
     #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'userEntity')]
     #[Assert\Count(
-        max:2,
+        max: 2,
         maxMessage: 'You can only have 2 books at a time.'
     )]
     private Collection $books;
 
     #[ORM\Column(enumType: UserStatusEnum::class)]
-    private ?UserStatusEnum $status;
+    private UserStatusEnum $status;
 
     public function __construct()
     {
@@ -82,9 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
+    /** @see UserInterface */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -94,9 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
+    /** @param list<string> $roles */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -104,9 +96,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
+    /** @see PasswordAuthenticatedUserInterface */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -119,20 +109,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
+    /** Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3. */
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }
 
-    /**
-     * @return Collection<int, Book>
-     */
+    /** @return Collection<int, Book> */
     public function getBooks(): Collection
     {
         return $this->books;
@@ -162,7 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getStatus(): ?UserStatusEnum
+    public function getStatus(): UserStatusEnum
     {
         return $this->status;
     }

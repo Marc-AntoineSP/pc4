@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Enum\BookTypeEnum;
@@ -36,13 +38,13 @@ class Book
     private ?string $author = null;
 
     #[ORM\Column(length: 255)]
-    private ?\DateTimeImmutable $publishedAt;
+    private \DateTimeImmutable $publishedAt;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
     private ?User $userEntity = null;
 
     #[ORM\Column]
-    private ?bool $isOnline;
+    private bool $isOnline;
 
     public function __construct()
     {
@@ -152,7 +154,7 @@ class Book
         return $this;
     }
 
-    public function getPublishedAt(): ?\DateTimeImmutable
+    public function getPublishedAt(): \DateTimeImmutable
     {
         return $this->publishedAt;
     }
@@ -164,7 +166,7 @@ class Book
         return $this;
     }
 
-    public function isOnline(): ?bool
+    public function isOnline(): bool
     {
         return $this->isOnline;
     }

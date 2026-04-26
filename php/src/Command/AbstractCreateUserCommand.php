@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\User;
@@ -29,7 +31,12 @@ abstract class AbstractCreateUserCommand extends Command
     {
         $this
             ->addArgument('email', InputArgument::REQUIRED, 'Email of the user to create.')
-            ->addOption('password', null, InputOption::VALUE_REQUIRED, 'Plain password. If omitted, the command will prompt for it securely.')
+            ->addOption(
+                'password',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Plain password. If omitted, the command will prompt for it securely.'
+            )
         ;
     }
 
@@ -68,9 +75,7 @@ abstract class AbstractCreateUserCommand extends Command
         return Command::SUCCESS;
     }
 
-    /**
-     * @return list<string>
-     */
+    /** @return list<string> */
     abstract protected function roles(): array;
 
     abstract protected function userLabel(): string;

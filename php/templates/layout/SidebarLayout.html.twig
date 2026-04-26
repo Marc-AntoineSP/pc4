@@ -20,7 +20,7 @@
                     <twig:Sidebar:NavItem content="All books" icon="iconoir:book-stack" href="{{ path('app_book_all') }}" active="{{ routeName == 'app_book_all' ? 'true' : 'false' }}" />
                 </li>
                 <li>
-                    <twig:Sidebar:NavItem content="New books" icon="material-symbols:newspaper" />
+                    <twig:Sidebar:NavItem content="My books" icon="material-symbols:newspaper" href="{{ path('app_book_me') }}" active="{{ routeName == 'app_book_me' ? 'true' : 'false' }}" />
                 </li>
                 <li>
                     <twig:Sidebar:NavItem content="Reference" icon="ooui:reference" />
