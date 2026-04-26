@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\UserStatusEnum;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -45,9 +46,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private Collection $books;
 
+    #[ORM\Column(enumType: UserStatusEnum::class)]
+    private ?UserStatusEnum $status;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
+        $this->status = UserStatusEnum::ACTIVE;
     }
 
     public function getId(): ?int
@@ -153,6 +158,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $book->setIsAvailable(true);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?UserStatusEnum
+    {
+        return $this->status;
+    }
+
+    public function setStatus(UserStatusEnum $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
