@@ -41,6 +41,6 @@ class BookCrudController extends AbstractCrudController
 
                 return (string) $value;
             });
-        yield BooleanField::new('isAvailable');
+        yield BooleanField::new('is_online');
     }
 }

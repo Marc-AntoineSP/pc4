@@ -39,6 +39,7 @@ final class BookController extends AbstractController
     public function all(EntityManagerInterface $entityManager): Response
     {
         $books = $entityManager->getRepository(Book::class)->findAll();
+        $books = array_filter($books, static fn(Book $book) => $book->isOnline());
         return $this->render('book/book_all.html.twig', [
             'books' => $books,
         ]);
@@ -47,6 +48,10 @@ final class BookController extends AbstractController
     #[Route('/{id}', name: 'detail', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function detail(Book $book): Response
     {
+        if(!$book->isOnline()){
+            $this->addFlash('error', 'This book is not available.');
+            return $this->redirectToRoute('app_book_all');
+        }
         return $this->render('book/book_detail.html.twig', [
             'book' => $book,
         ]);
@@ -55,6 +60,11 @@ final class BookController extends AbstractController
     #[Route('/{id}/loan', name: 'loan', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function loan(Book $book, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if(!$book->isOnline()){
+            $this->addFlash('error', 'This book is not available.');
+            return $this->redirectToRoute('app_book_all');
+        }
+
         if (!$this->isCsrfTokenValid('loan_book_'.$book->getId(), (string) $request->request->get('_token'))) {
             $this->addFlash('error', 'Invalid loan request.');
 
