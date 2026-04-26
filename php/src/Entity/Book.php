@@ -41,9 +41,14 @@ class Book
     #[ORM\ManyToOne(inversedBy: 'books')]
     private ?User $userEntity = null;
 
+    #[ORM\Column]
+    private ?bool $isOnline;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTimeImmutable();
+        $this->isAvailable = true;
+        $this->isOnline = true;
     }
 
     public function getId(): ?int
@@ -155,6 +160,18 @@ class Book
     public function setPublishedAt(\DateTimeImmutable $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    public function isOnline(): ?bool
+    {
+        return $this->isOnline;
+    }
+
+    public function setIsOnline(bool $isOnline): static
+    {
+        $this->isOnline = $isOnline;
 
         return $this;
     }
