@@ -20,10 +20,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Prepare Symfony .env for Docker build
+        run: |
+          if [ ! -f php/.env ]; then
+            cp php/.env.dev php/.env
+          fi
 
       - name: Build dev image (Makefile)
         run: make build ENV=dev
