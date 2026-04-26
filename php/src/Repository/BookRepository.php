@@ -15,4 +15,26 @@ class BookRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Book::class);
     }
+
+    /**
+     * @return Book[]
+     */
+    public function findOnlineOrderedByPublishedAtDesc(): array
+    {
+        return $this->createQueryBuilder('book')
+            ->andWhere('book.isOnline = :isOnline')
+            ->setParameter('isOnline', true)
+            ->orderBy('book.publishedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countLoanedBooks(): int
+    {
+        return (int) $this->createQueryBuilder('book')
+            ->select('COUNT(book.id)')
+            ->andWhere('book.userEntity IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
