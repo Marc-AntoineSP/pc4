@@ -19,6 +19,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
+    public function countNonAdminUsers(): int
+    {
+        $users = $this->createQueryBuilder('u')
+            ->select('u.roles')
+            ->getQuery()
+            ->getArrayResult();
+
+        $count = 0;
+        foreach ($users as $user) {
+            $rawRoles = $user['roles'] ?? [];
+            $roles = match (true) {
+                is_array($rawRoles) => $rawRoles,
+                is_string($rawRoles) => is_array($decodedRoles = json_decode($rawRoles, true)) ? $decodedRoles : [],
+                default => [],
+            };
+            if (!in_array('ROLE_ADMIN', $roles, true)) {
+                ++$count;
+            }
+        }
+
+        return $count;
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
