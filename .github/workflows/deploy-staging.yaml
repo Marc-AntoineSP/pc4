@@ -124,5 +124,17 @@ jobs:
           APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml exec -T app php bin/console importmap:install --env=prod --no-interaction
           APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml exec -T app php bin/console tailwind:build --minify --env=prod --no-interaction
           APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml exec -T app php bin/console asset-map:compile --env=prod --no-interaction
+          cat <<'SQL' | APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml exec -T database sh -lc 'psql -U postgres -d postgres -v ON_ERROR_STOP=1 -v app_user="$POSTGRES_USER" -v app_pass="$POSTGRES_PASSWORD" -f -'
+          SELECT format(
+              CASE
+                  WHEN EXISTS (SELECT 1 FROM pg_roles WHERE rolname = :'app_user')
+                      THEN 'ALTER ROLE %I WITH LOGIN PASSWORD %L;'
+                  ELSE
+                      'CREATE ROLE %I WITH LOGIN PASSWORD %L;'
+              END,
+              :'app_user',
+              :'app_pass'
+          ) \gexec
+          SQL
           APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml exec -T app php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
           docker image prune -f
