@@ -74,6 +74,11 @@ jobs:
       contents: read
       packages: read
     steps:
+      - name: Checkout staging commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
       - name: Login to GHCR
         uses: docker/login-action@v3
         with:
@@ -81,12 +86,25 @@ jobs:
           username: ${{ needs.build_push.outputs.owner_lc }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Sync compose files to staging directory
+        env:
+          STAGING_APP_DIR: ${{ secrets.STAGING_APP_DIR }}
+        run: |
+          resolved_dir="${STAGING_APP_DIR/#\~/$HOME}"
+          mkdir -p "${resolved_dir}"
+          install -m 0644 compose.yaml "${resolved_dir}/compose.yaml"
+          install -m 0644 compose.staging.yaml "${resolved_dir}/compose.staging.yaml"
+
       - name: Deploy staging stack
         env:
           STAGING_APP_DIR: ${{ secrets.STAGING_APP_DIR }}
           APP_IMAGE: ${{ needs.build_push.outputs.app_image }}:staging
         run: |
           resolved_dir="${STAGING_APP_DIR/#\~/$HOME}"
-          cd "${resolved_dir}"
-          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml pull app
-          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml up -d --remove-orphans
+          env_file="${resolved_dir}/.env.staging"
+          if [ ! -f "${env_file}" ]; then
+            echo "Missing ${env_file}"
+            exit 1
+          fi
+          APP_IMAGE="${APP_IMAGE}" docker compose --env-file "${env_file}" -f "${resolved_dir}/compose.yaml" -f "${resolved_dir}/compose.staging.yaml" pull app
+          APP_IMAGE="${APP_IMAGE}" docker compose --env-file "${env_file}" -f "${resolved_dir}/compose.yaml" -f "${resolved_dir}/compose.staging.yaml" up -d --remove-orphans
