@@ -119,6 +119,6 @@ jobs:
           fi
           cd "${resolved_dir}"
           APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml pull app
-          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml up -d --no-deps app
-          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml up -d --remove-orphans
+          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml up -d --no-build --no-deps app
+          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml up -d --no-build --remove-orphans
           docker image prune -f
