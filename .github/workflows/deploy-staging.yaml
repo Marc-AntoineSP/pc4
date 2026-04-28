@@ -121,4 +121,5 @@ jobs:
           APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml pull app
           APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml up -d --no-build --no-deps app
           APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml up -d --no-build --remove-orphans
+          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml exec -T app php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
           docker image prune -f
