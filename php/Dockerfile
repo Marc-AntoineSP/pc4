@@ -97,9 +97,6 @@ COPY --chown=appuser:appuser . /app
 
 USER appuser
 
-RUN APP_SECRET=build-time-secret php bin/console tailwind:build --minify --env=prod --no-interaction \
-    && APP_SECRET=build-time-secret php bin/console asset-map:compile --env=prod --no-interaction
-
 
 FROM base AS prod
 
@@ -109,9 +106,6 @@ COPY --from=vendor_prod /app/vendor /app/vendor
 COPY --chown=appuser:appuser . /app
 
 USER appuser
-
-RUN APP_SECRET=build-time-secret php bin/console tailwind:build --minify --env=prod --no-interaction \
-    && APP_SECRET=build-time-secret php bin/console asset-map:compile --env=prod --no-interaction
 
 
 FROM dev AS ci
