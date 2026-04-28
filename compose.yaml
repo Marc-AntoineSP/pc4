@@ -38,20 +38,6 @@ services:
     networks:
       - internal_network
 
-  notifuse:
-    image: notifuse/notifuse:latest
-    restart: unless-stopped
-    environment:
-      NOTIFUSE_TOKEN: ${NOTIFUSE_TOKEN}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SECRET_KEY: ${SECRET_KEY}
-      DB_SSLMODE: disable
-    networks:
-      - internal_network
-
   minio:
     image: minio/minio:latest
     restart: unless-stopped

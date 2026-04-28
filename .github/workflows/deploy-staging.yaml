@@ -106,5 +106,17 @@ jobs:
             echo "Missing ${env_file}"
             exit 1
           fi
-          APP_IMAGE="${APP_IMAGE}" docker compose --env-file "${env_file}" -f "${resolved_dir}/compose.yaml" -f "${resolved_dir}/compose.staging.yaml" pull app
-          APP_IMAGE="${APP_IMAGE}" docker compose --env-file "${env_file}" -f "${resolved_dir}/compose.yaml" -f "${resolved_dir}/compose.staging.yaml" up -d --remove-orphans
+          compose_cmd=(docker compose --env-file "${env_file}" -f "${resolved_dir}/compose.yaml" -f "${resolved_dir}/compose.staging.yaml")
+
+          APP_IMAGE="${APP_IMAGE}" "${compose_cmd[@]}" pull app
+
+          if APP_IMAGE="${APP_IMAGE}" "${compose_cmd[@]}" ps --services --all | grep -qx app; then
+            echo "Existing stack detected, updating app service only."
+            APP_IMAGE="${APP_IMAGE}" "${compose_cmd[@]}" up -d --no-deps app
+          else
+            echo "First deploy bootstrap, creating full stack."
+            APP_IMAGE="${APP_IMAGE}" "${compose_cmd[@]}" up -d
+          fi
+
+          APP_IMAGE="${APP_IMAGE}" "${compose_cmd[@]}" up -d --remove-orphans
+          APP_IMAGE="${APP_IMAGE}" "${compose_cmd[@]}" ps

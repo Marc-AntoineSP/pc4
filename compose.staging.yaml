@@ -10,25 +10,17 @@ services:
     networks:
       - caddy_network
     labels:
-      caddy: ${APP_HOST:-staging.app.local}
+      caddy: ${APP_HOST:-pc4.staging.arukanin.fr}
       caddy.reverse_proxy: "{{upstreams 80}}"
-
-  notifuse:
-    networks:
-      - internal_network
-      - caddy_network
-    labels:
-      caddy: ${NOTIFUSE_HOST:-notifuse.staging.app.local}
-      caddy.reverse_proxy: "{{upstreams 8080}}"
 
   minio:
     networks:
       - internal_network
       - caddy_network
     labels:
-      caddy: ${S3_HOST:-s3.staging.app.local}
+      caddy: ${S3_HOST:-s3.pc4.staging.arukanin.fr}
       caddy.reverse_proxy: "{{upstreams 9000}}"
-      caddy_1: ${MINIO_CONSOLE_HOST:-minio.staging.app.local}
+      caddy_1: ${MINIO_CONSOLE_HOST:-minio.pc4.staging.arukanin.fr}
       caddy_1.reverse_proxy: "{{upstreams 9001}}"
 
   caddy:
@@ -44,10 +36,9 @@ services:
     networks:
       caddy_network:
         aliases:
-          - ${APP_HOST:-staging.app.local}
-          - ${S3_HOST:-s3.staging.app.local}
-          - ${MINIO_CONSOLE_HOST:-minio.staging.app.local}
-          - ${NOTIFUSE_HOST:-notifuse.staging.app.local}
+          - ${APP_HOST:-pc4.staging.arukanin.fr}
+          - ${S3_HOST:-s3.pc4.staging.arukanin.fr}
+          - ${MINIO_CONSOLE_HOST:-minio.pc4.staging.arukanin.fr}
 
 volumes:
   caddy_data:
