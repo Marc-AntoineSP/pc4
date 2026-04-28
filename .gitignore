@@ -1,5 +1,4 @@
 # Environment files
-.env
 .env.local
 .env.*.local
 
@@ -19,3 +18,4 @@ Caddy/config/
 Thumbs.db
 /.env.prod
 /.env.staging
+/ADR/

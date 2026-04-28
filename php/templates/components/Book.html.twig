@@ -1,0 +1,60 @@
+{# @prop id int|string|null #}
+{# @prop title string #}
+{# @prop type string #}
+{# @prop author string #}
+{# @prop pages int|string|null #}
+{# @prop available bool|string #}
+{# @prop showAvailability bool|string #}
+{# @prop linkToDetail bool|string #}
+
+{%- props id = null, title = "N/A", type = "N/A", author = "N/A", pages = null, available = true, showAvailability = true, linkToDetail = true -%}
+{% set isAvailable = available is same as(true) or available == 'true' or available == 1 or available == '1' %}
+{% set shouldShowAvailability = showAvailability is same as(true) or showAvailability == 'true' or showAvailability == 1 or showAvailability == '1' %}
+{% set hasPages = pages is not same as(null) and pages != '' %}
+{% set hasDetailId = id is not same as(null) and id != '' %}
+{% set canLinkToDetail = (linkToDetail is same as(true) or linkToDetail == 'true' or linkToDetail == 1 or linkToDetail == '1') and hasDetailId %}
+
+{% if canLinkToDetail %}
+    <a href="{{ path('app_book_detail', { id: id }) }}" class="group block h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Open details for {{ title }}">
+{% else %}
+    <div class="group h-full w-full">
+{% endif %}
+    <div class="relative flex h-full min-h-[13rem] flex-col overflow-hidden border border-[#dccba8] bg-[linear-gradient(180deg,#f5ecd9_0%,#ecdfc2_100%)] px-4 py-3 shadow-[0_10px_20px_rgba(61,30,26,0.12)] transition-all duration-300 {{ canLinkToDetail ? 'cursor-pointer group-hover:-translate-y-1 group-hover:shadow-[0_14px_24px_rgba(61,30,26,0.18)]' : 'cursor-default' }}">
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.35),transparent_40%)]"></div>
+        <div class="pointer-events-none absolute inset-y-0 left-0 w-3 border-r border-[#d8c29d] bg-[linear-gradient(180deg,#e5d2ae_0%,#d7bf95_100%)]"></div>
+        <div class="relative pl-2">
+            <span class="mb-2 block text-[9px] font-sans font-bold uppercase tracking-[0.22em] text-primary/55">{{ type }}</span>
+            <h4 class="max-w-[10ch] text-[1.15rem] leading-[1.05] font-serif font-bold text-primary">{{ author }}</h4>
+        </div>
+        <div class="relative flex flex-1 items-center justify-center px-2 py-2">
+            <p class="max-w-[11ch] text-center text-[1.45rem] leading-[0.95] font-serif font-black uppercase tracking-[0.07em] text-primary">{{ title }}</p>
+        </div>
+        <div class="relative mt-auto flex items-end justify-between pl-2 {{ shouldShowAvailability or hasPages ? 'pt-3' : 'pt-1' }}">
+            <div class="flex min-h-6 flex-col items-start justify-end gap-1">
+                {% if shouldShowAvailability %}
+                    {% if isAvailable %}
+                        <div class="flex items-center gap-1.5 text-[9px] font-sans font-bold uppercase tracking-[0.18em] text-primary/70">
+                            <span class="inline-block h-2 w-2 rounded-full bg-success shadow-[0_0_0_2px_rgba(79,121,66,0.12)]"></span>
+                            <span>Available for loan</span>
+                        </div>
+                    {% else %}
+                        <div class="flex items-center gap-1.5 text-[9px] font-sans font-bold uppercase tracking-[0.18em] text-primary/70">
+                            <span class="inline-block h-2 w-2 rounded-full bg-error shadow-[0_0_0_2px_rgba(79,121,66,0.12)]"></span>
+                            <span>Not available atm</span>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                {% if hasPages %}
+                    <span class="text-[9px] font-sans font-bold uppercase tracking-[0.2em] text-primary/65">{{ pages }} pages</span>
+                {% endif %}
+            </div>
+            <div class="flex h-5 w-5 items-center justify-center rounded-full border border-[#d5bc93] bg-[radial-gradient(circle,#f7edd8_0%,#e7d5b4_70%,#d4bb8f_100%)] shadow-inner">
+                <div class="h-1.5 w-1.5 rounded-full bg-[#c7ab78]"></div>
+            </div>
+        </div>
+    </div>
+{% if canLinkToDetail %}
+    </a>
+{% else %}
+    </div>
+{% endif %}

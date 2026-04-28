@@ -1,0 +1,21 @@
+{# prop title string #}
+{# prop author string #}
+{# prop date string #}
+
+{% props title = "N/A", author = "N/A", date = "N/A" %}
+
+<div class="relative flex min-h-[18rem] flex-col overflow-hidden border-[3px] border-[#d6b56f] bg-[linear-gradient(90deg,#2a120f_0%,#4a2018_12%,#3a1712_26%,#411b15_100%)] p-6 text-secondary shadow-[0_14px_24px_rgba(32,10,8,0.32)]">
+    <div class="pointer-events-none absolute inset-y-0 left-0 w-10 bg-[linear-gradient(90deg,rgba(255,255,255,0.12),rgba(255,255,255,0.03)_45%,transparent)]"></div>
+    <div class="pointer-events-none absolute inset-x-5 top-5 h-px bg-secondary/70"></div>
+    <div class="pointer-events-none absolute inset-x-5 bottom-5 h-px bg-secondary/70"></div>
+    <div class="relative pt-6">
+        <span class="mb-3 block text-[11px] font-sans font-bold uppercase tracking-[0.22em] text-[#d9ae33]">In your collection</span>
+        <h3 class="max-w-[12ch] text-[2rem] leading-[1.08] font-serif font-bold text-[#f6e4ad]">{{ title }}</h3>
+    </div>
+    <div class="relative mt-auto flex items-end justify-between gap-4 pt-8">
+        <div>
+            <p class="mb-4 text-lg font-serif font-semibold italic text-[#c9a24f]">By {{ author }}, {{ date }}</p>
+        </div>
+        <span class="mb-1 text-2xl leading-none text-[#e0a420]">★</span>
+    </div>
+</div>

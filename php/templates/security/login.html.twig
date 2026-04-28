@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Library Login{% endblock %}
+
+{% block body %}
+    <main class="flex min-h-screen w-full items-center justify-center bg-[radial-gradient(circle_at_top,#f8eddc_0%,#f1e0c2_38%,#e1ccaa_100%)] px-4 py-6">
+        <section class="card w-full max-w-md rounded-none border border-base-300 bg-base-100 shadow-[0_18px_36px_rgba(61,30,26,0.16)]">
+            <div class="card-body gap-5 p-6 sm:p-8">
+                <div class="space-y-3">
+                    <span class="badge badge-outline rounded-none px-3 py-3 font-sans text-[10px] uppercase tracking-[0.28em] text-primary">Library Access</span>
+                    <div>
+                        <h2 class="text-4xl font-serif font-bold tracking-tight text-primary">Sign in</h2>
+                        <p class="mt-2 text-sm italic text-base-content/70">Use your member account to access the library</p>
+                    </div>
+                </div>
+
+                {% if error %}
+                    <div class="alert alert-error rounded-none">
+                        <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                    </div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="alert rounded-none border border-success/30 bg-success/10 text-success-content">
+                        <span>Signed in as {{ app.user.userIdentifier }}.</span>
+                        <a class="link link-hover font-bold text-primary" href="{{ logout_path() }}">Logout</a>
+                    </div>
+                {% endif %}
+
+                <div class="divider my-0 font-sans text-[10px] uppercase tracking-[0.24em] text-primary/50">Member Credentials</div>
+
+                <form method="post" class="space-y-5">
+                    <label class="form-control w-full">
+                        <div class="label px-0 pb-2">
+                            <span class="label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/70">Email</span>
+                        </div>
+                        <input
+                            type="email"
+                            value="{{ last_username }}"
+                            name="_username"
+                            id="username"
+                            class="input input-bordered w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none"
+                            autocomplete="email"
+                            placeholder="reader@library.local"
+                            required
+                            autofocus
+                        >
+                    </label>
+
+                    <label class="form-control w-full">
+                        <div class="label px-0 pb-2">
+                            <span class="label-text font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-primary/70">Password</span>
+                        </div>
+                        <input
+                            type="password"
+                            name="_password"
+                            id="password"
+                            class="input input-bordered w-full rounded-none border-base-300 bg-base-100 focus:border-primary focus:outline-none"
+                            autocomplete="current-password"
+                            placeholder="Your password"
+                            required
+                        >
+                    </label>
+
+                    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+                    <button class="btn btn-primary btn-block rounded-none font-sans text-xs uppercase tracking-[0.28em]" type="submit">
+                        Open the library
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+{% endblock %}

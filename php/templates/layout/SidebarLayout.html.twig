@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{%  block body %}
+
+    {% set routeName = app.request.attributes.get('_route') %}
+
+<div class="drawer h-screen w-full overflow-hidden lg:drawer-open">
+    <input class="drawer-toggle" id="main-drawer" type="checkbox"/>
+    <div class="drawer-side z-40">
+        <label aria-label="close sidebar" class="drawer-overlay" for="main-drawer"></label>
+        <aside class="w-64 min-h-full bg-neutral text-neutral-content wood-texture border-r-4 border-black/20 flex flex-col">
+            <div class="p-6 border-b border-white/5">
+                <a class="font-serif italic text-xl text-secondary" href="{{ path('app_home') }}">The great library</a>
+                <p class="font-sans text-[10px] uppercase tracking-widest opacity-60">Master Catalog</p>
+            </div>
+            <ul class="menu p-0 flex-1 space-y-1 mt-4">
+                <li>
+                    <twig:Sidebar:NavItem content="Home" icon="flowbite:book-solid" href="{{ path('app_home') }}" active="{{ routeName == 'app_home' ? 'true' : 'false' }}"/>
+                </li>
+                <li>
+                    <twig:Sidebar:NavItem content="All books" icon="iconoir:book-stack" href="{{ path('app_book_all') }}" active="{{ routeName == 'app_book_all' ? 'true' : 'false' }}" />
+                </li>
+                <li>
+                    <twig:Sidebar:NavItem content="My books" icon="material-symbols:newspaper" href="{{ path('app_book_me') }}" active="{{ routeName == 'app_book_me' ? 'true' : 'false' }}" />
+                </li>
+                <li>
+                    <twig:Sidebar:NavItem content="Reference" icon="ooui:reference" />
+                </li>
+            </ul>
+            <div class="p-6 mt-auto space-y-6">
+                <a class="btn btn-primary btn-block rounded-none font-sans uppercase tracking-widest text-xs" href="{{ path('app_book_add') }}">
+                    Add New Volume
+                </a>
+                <div class="flex items-center gap-3 border-t border-white/10 pt-6">
+                    <div class="avatar placeholder">
+                        <div class="bg-primary text-primary-content rounded-full w-10 border border-secondary/30 flex justify-center items-center">
+                            <span class="material-symbols-outlined">{{ app.user.email|first|upper }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-tighter text-secondary">Your Profile</p>
+                        <p class="text-xs opacity-60">{{ app.user.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+    {% block main_content %}{% endblock %}
+</div>
+{% endblock %}

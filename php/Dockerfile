@@ -90,7 +90,7 @@ USER appuser
 
 FROM base AS staging
 
-ENV APP_ENV=staging
+ENV APP_ENV=prod
 
 COPY --from=vendor_prod /app/vendor /app/vendor
 COPY --chown=appuser:appuser . /app

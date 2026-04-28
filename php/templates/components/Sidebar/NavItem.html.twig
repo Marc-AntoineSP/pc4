@@ -1,0 +1,23 @@
+{# prop content string #}
+{# prop href string #}
+{# prop active string|bool #}
+{# prop icon string #}
+
+{% props content = "N/A", href = "#", active = false, icon = "" %}
+
+{% set isActive = active is same as(true) or active == 'true' or active == 1 or active == '1' %}
+
+{%- set menuStyle = html_cva(
+    base: 'rounded-none py-4 px-6 transition-colors',
+    variants: {
+        active: {
+            default: 'border-l-4 border-transparent hover:bg-white/5',
+            active: 'border-l-4 border-secondary bg-white/5 text-secondary active',
+        },
+    }
+) -%}
+
+<a class="{{ menuStyle.apply({ active: isActive ? 'active' : 'default' }) }}" href="{{ href }}">
+    <twig:ux:icon name="{{ icon }}" />
+    <span class="font-sans uppercase tracking-widest text-xs font-bold">{{ content }}</span>
+</a>

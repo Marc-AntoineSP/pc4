@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <description>Ruleset PHPCBF auto-fixable only.</description>
+
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcbf-cache"/>
+    <arg name="colors"/>
+    <arg name="parallel" value="8"/>
+    <arg name="extensions" value="php"/>
+    <arg name="report" value="full"/>
+
+    <rule ref="PSR12"/>
+
+    <file>bin/</file>
+    <file>config/</file>
+    <file>src/</file>
+    <file>tests/</file>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>var/*</exclude-pattern>
+    <exclude-pattern>public/bundles/*</exclude-pattern>
+    <exclude-pattern>public/build/*</exclude-pattern>
+    <exclude-pattern>migrations/*</exclude-pattern>
+    <exclude-pattern>assets/*</exclude-pattern>
+    <exclude-pattern>tests/e2e/*</exclude-pattern>
+    <exclude-pattern>config/reference.php</exclude-pattern>
+    <exclude-pattern>config/bundles.php</exclude-pattern>
+    <exclude-pattern>config/preload.php</exclude-pattern>
+
+</ruleset>

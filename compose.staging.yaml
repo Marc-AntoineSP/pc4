@@ -1,10 +1,12 @@
 services:
   app:
+    image: ${APP_IMAGE:-app-staging-app}
     build:
       target: staging
     environment:
-      APP_ENV: ${APP_ENV:-staging}
-      APP_DEBUG: ${APP_DEBUG:-0}
+      APP_ENV: prod
+      APP_DEBUG: "0"
+      APP_RUNTIME_ENV: ${APP_RUNTIME_ENV:-staging}
     networks:
       - caddy_network
     labels:

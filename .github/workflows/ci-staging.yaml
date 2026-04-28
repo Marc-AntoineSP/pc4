@@ -1,0 +1,55 @@
+name: CI Staging
+
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - staging
+
+jobs:
+  ci-staging:
+    name: Build, Lint, Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Prepare Symfony .env for Docker build
+        run: |
+          if [ ! -f php/.env ]; then
+            cp php/.env.dev php/.env
+          fi
+
+      - name: Build staging image (Makefile)
+        run: make build ENV=staging
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+
+      - name: Install dependencies
+        working-directory: php
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Validate composer.json
+        working-directory: php
+        run: composer validate --strict --no-check-publish
+
+      - name: Run linters
+        working-directory: php
+        run: |
+          composer phpstan
+          composer phpcs
+
+      - name: Run tests
+        working-directory: php
+        run: ./bin/phpunit --configuration=phpunit.dist.xml
