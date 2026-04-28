@@ -50,15 +50,6 @@ https://{$APP_HOST} {
 	import proxy_target app 80
 }
 
-http://{$NOTIFUSE_HOST} {
-	redir https://{$NOTIFUSE_HOST}{uri} permanent
-}
-
-https://{$NOTIFUSE_HOST} {
-	import dev_tls
-	import proxy_target notifuse 8080
-}
-
 http://{$S3_HOST} {
 	redir https://{$S3_HOST}{uri} permanent
 }

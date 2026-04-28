@@ -24,11 +24,6 @@ services:
       - internal_network
       - caddy_network
 
-  notifuse:
-    networks:
-      - internal_network
-      - caddy_network
-
   minio:
     networks:
       - internal_network
@@ -42,7 +37,6 @@ services:
       - "443:443"
     environment:
       APP_HOST: ${APP_HOST:-app.local}
-      NOTIFUSE_HOST: ${NOTIFUSE_HOST:-notifuse.local}
       S3_HOST: ${S3_HOST:-s3.local}
       MINIO_CONSOLE_HOST: ${MINIO_CONSOLE_HOST:-minio.local}
     volumes:
