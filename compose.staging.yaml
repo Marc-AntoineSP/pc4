@@ -26,7 +26,12 @@ services:
       S3_HOST: ${S3_HOST:-s3.pc4.staging.arukanin.fr}
       MINIO_CONSOLE_HOST: ${MINIO_CONSOLE_HOST:-minio.pc4.staging.arukanin.fr}
     volumes:
-      - ./Caddy/Caddyfile.staging:/etc/caddy/Caddyfile:ro
+      - type: bind
+        source: ./Caddy/Caddyfile.staging
+        target: /etc/caddy/Caddyfile
+        read_only: true
+        bind:
+          create_host_path: false
       - caddy_data:/data
       - caddy_config:/config
     networks:
