@@ -70,6 +70,7 @@ jobs:
           path: |
             compose.yaml
             compose.staging.yaml
+            Caddy/Caddyfile.staging
           if-no-files-found: error
           retention-days: 7
 
@@ -103,9 +104,10 @@ jobs:
           STAGING_APP_DIR: ${{ secrets.STAGING_APP_DIR }}
         run: |
           resolved_dir="${STAGING_APP_DIR/#\~/$HOME}"
-          mkdir -p "${resolved_dir}"
+          mkdir -p "${resolved_dir}" "${resolved_dir}/Caddy"
           install -m 0644 /tmp/staging-compose/compose.yaml "${resolved_dir}/compose.yaml"
           install -m 0644 /tmp/staging-compose/compose.staging.yaml "${resolved_dir}/compose.staging.yaml"
+          install -m 0644 /tmp/staging-compose/Caddy/Caddyfile.staging "${resolved_dir}/Caddy/Caddyfile.staging"
 
       - name: Deploy staging
         env:
