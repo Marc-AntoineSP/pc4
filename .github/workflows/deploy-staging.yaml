@@ -70,7 +70,6 @@ jobs:
           path: |
             compose.yaml
             compose.staging.yaml
-            Caddy/Caddyfile.staging
           if-no-files-found: error
           retention-days: 7
 
@@ -104,25 +103,9 @@ jobs:
           STAGING_APP_DIR: ${{ secrets.STAGING_APP_DIR }}
         run: |
           resolved_dir="${STAGING_APP_DIR/#\~/$HOME}"
-          mkdir -p "${resolved_dir}" "${resolved_dir}/Caddy"
-          artifact_caddyfile="/tmp/staging-compose/Caddy/Caddyfile.staging"
-          if [ ! -f "${artifact_caddyfile}" ] && [ -f "/tmp/staging-compose/Caddyfile.staging" ]; then
-            artifact_caddyfile="/tmp/staging-compose/Caddyfile.staging"
-          fi
-          if [ ! -f "${artifact_caddyfile}" ]; then
-            echo "Missing staging Caddyfile in artifact"
-            exit 1
-          fi
+          mkdir -p "${resolved_dir}"
           install -m 0644 /tmp/staging-compose/compose.yaml "${resolved_dir}/compose.yaml"
           install -m 0644 /tmp/staging-compose/compose.staging.yaml "${resolved_dir}/compose.staging.yaml"
-          target_caddyfile="${resolved_dir}/Caddy/Caddyfile.staging"
-          if [ -d "${target_caddyfile}" ]; then
-            backup_dir="${target_caddyfile}.dir-bak-$(date +%s)"
-            mv "${target_caddyfile}" "${backup_dir}"
-            echo "Moved unexpected directory ${target_caddyfile} to ${backup_dir}"
-          fi
-          install -m 0644 "${artifact_caddyfile}" "${target_caddyfile}"
-          test -f "${target_caddyfile}"
 
       - name: Deploy staging
         env:
