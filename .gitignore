@@ -17,4 +17,5 @@ Caddy/config/
 .DS_Store
 Thumbs.db
 /.env.prod
+/.env.staging
 /ADR/

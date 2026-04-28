@@ -1,0 +1,92 @@
+name: Deploy Staging
+
+on:
+  workflow_run:
+    workflows:
+      - CI Staging
+    types:
+      - completed
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build_push:
+    name: Build And Push Staging Image
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'staging'
+    runs-on: ubuntu-latest
+    outputs:
+      owner_lc: ${{ steps.meta.outputs.owner_lc }}
+      app_image: ${{ steps.meta.outputs.app_image }}
+    steps:
+      - name: Checkout staging commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Lowercase owner
+        id: meta
+        run: |
+          owner_lc="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+          echo "owner_lc=${owner_lc}" >> "$GITHUB_OUTPUT"
+          echo "app_image=ghcr.io/${owner_lc}/projet-cube-app" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare Symfony .env for Docker build
+        run: |
+          if [ ! -f php/.env ]; then
+            cp php/.env.dev php/.env
+          fi
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ steps.meta.outputs.owner_lc }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push staging app image
+        env:
+          APP_IMAGE: ${{ steps.meta.outputs.app_image }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          docker build \
+            --file php/Dockerfile \
+            --target staging \
+            --tag "${APP_IMAGE}:staging" \
+            --tag "${APP_IMAGE}:${HEAD_SHA}" \
+            ./php
+          docker push "${APP_IMAGE}:staging"
+          docker push "${APP_IMAGE}:${HEAD_SHA}"
+
+  deploy:
+    name: Deploy To Staging Server
+    needs: build_push
+    if: needs.build_push.result == 'success'
+    runs-on:
+      - self-hosted
+      - staging
+    environment: staging
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ needs.build_push.outputs.owner_lc }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy staging stack
+        env:
+          STAGING_APP_DIR: ${{ secrets.STAGING_APP_DIR }}
+          APP_IMAGE: ${{ needs.build_push.outputs.app_image }}:staging
+        run: |
+          resolved_dir="${STAGING_APP_DIR/#\~/$HOME}"
+          cd "${resolved_dir}"
+          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml pull app
+          APP_IMAGE="${APP_IMAGE}" docker compose --env-file .env.staging -f compose.yaml -f compose.staging.yaml up -d --remove-orphans

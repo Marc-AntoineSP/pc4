@@ -1,5 +1,6 @@
 services:
   app:
+    image: ${APP_IMAGE:-app-staging-app}
     build:
       target: staging
     environment:
