@@ -6,34 +6,25 @@ services:
       APP_ENV: ${APP_ENV:-prod}
       APP_DEBUG: ${APP_DEBUG:-0}
     networks:
-      - caddy_network
+      - internal_network
+      - app_proxy
+    labels:
+      caddy: ${APP_HOST:-app.local}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.tls: internal
 
   minio:
     networks:
       - internal_network
-      - caddy_network
-
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      APP_HOST: ${APP_HOST:-app.example.com}
-      S3_HOST: ${S3_HOST:-s3.example.com}
-      MINIO_CONSOLE_HOST: ${MINIO_CONSOLE_HOST:-minio.example.com}
-    volumes:
-      - ./Caddy/Caddyfile.prod:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    networks:
-      - caddy_network
-
-volumes:
-  caddy_data:
-  caddy_config:
+      - app_proxy
+    labels:
+      caddy: ${S3_HOST:-s3.local}
+      caddy.reverse_proxy: "{{upstreams 9000}}"
+      caddy.tls: internal
+      caddy_1: ${MINIO_CONSOLE_HOST:-minio.local}
+      caddy_1.reverse_proxy: "{{upstreams 9001}}"
+      caddy_1.tls: internal
 
 networks:
-  caddy_network:
-    driver: bridge
+  app_proxy:
+    external: true
